@@ -1,4 +1,4 @@
-# Projeto Frontend Base configurado por @engRenanTorres com Next e Firebase
+# Frontend web do projeto do Engenharia de Concursos
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

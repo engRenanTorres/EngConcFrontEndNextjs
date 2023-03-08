@@ -3,7 +3,8 @@ import { User } from '@/domain/users/users';
 import { useRouter } from 'next/router';
 import React, { ReactNode, createContext, useState } from 'react';
 import { auth } from '../config/firebaseConfig';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
+import { authService } from '@/services/auth/authService';
 
 type Props = {
   children: ReactNode;
@@ -31,13 +32,14 @@ export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
   const signin = async (email: string, password: string) => {
     try {
       setLoading(true);
-      return await signInWithEmailAndPassword(auth, email, password)
+      return await authService
+        .login({ email, password })
         .then((response) => {
-          setCurrentUser(response.user);
-          //console.log('response', response);
+          //setCurrentUser(response.user);
+          console.log('response', response);
           router.push('/');
         })
-        .catch((error) => console.log('loginError', error));
+        .catch((error) => alert(error.message));
     } finally {
       setLoading(false);
     }

@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import { Header } from '@/components/global/Header';
-import Topbar from '@/components/global/Topbar';
 import { HOME_SUBTITLE, HOME_TITLE } from '@/config/appMessages';
 import useAuth from '@/utils/hooks/useAuth';
+import { tokenService } from '@/services/auth/tokenService';
+import { NextApiRequest, NextPageContext } from 'next';
 
-export default function Home() {
+export default function Home(props: any) {
   const { currentUser, loading, signin, signout } = useAuth();
   return (
     <>
@@ -17,7 +18,26 @@ export default function Home() {
       <main>
         <Header title={HOME_TITLE} subtitle={HOME_SUBTITLE} />
         <h1>oi</h1>
+        <pre>{JSON.stringify(props, null, 2)}</pre>
       </main>
     </>
   );
 }
+
+export async function getServerSideProps(ctx: ContextNookie) {
+  const token = tokenService.get(ctx);
+  console.log(token);
+
+  return {
+    props: {
+      token: token,
+    },
+  };
+}
+
+type ContextNookie =
+  | Pick<NextPageContext, 'req'>
+  | { req: NextApiRequest }
+  | { req: Request }
+  | null
+  | undefined;
