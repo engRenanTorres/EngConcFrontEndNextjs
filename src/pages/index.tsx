@@ -2,8 +2,7 @@ import Head from 'next/head';
 import { Header } from '@/components/global/Header';
 import { HOME_SUBTITLE, HOME_TITLE } from '@/config/appMessages';
 import useAuth from '@/utils/hooks/useAuth';
-import { tokenService } from '@/services/auth/tokenService';
-import { NextApiRequest, NextPageContext } from 'next';
+import withSession from '@/services/auth/session';
 
 export default function Home(props: any) {
   const { currentUser, loading, signin, signout } = useAuth();
@@ -24,20 +23,33 @@ export default function Home(props: any) {
   );
 }
 
-export async function getServerSideProps(ctx: ContextNookie) {
-  const token = tokenService.get(ctx);
-  console.log(token);
-
+export const getServerSideProps = withSession((ctx: any) => {
+  const context = ctx as unknown as ContextReq;
   return {
     props: {
-      token: token,
+      session: context.req.session,
     },
   };
-}
+});
 
-type ContextNookie =
-  | Pick<NextPageContext, 'req'>
-  | { req: NextApiRequest }
-  | { req: Request }
-  | null
-  | undefined;
+type ContextReq = {
+  req: { session: object };
+};
+
+// export async function getServerSideProps(ctx: ContextNookie) {
+//   try {
+//     const session = await authService.getSession(ctx);
+//     return {
+//       props: {
+//         token: session,
+//       },
+//     };
+//   } catch (error) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: '/login',
+//       },
+//     };
+//   }
+// }

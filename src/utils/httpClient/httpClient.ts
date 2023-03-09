@@ -1,4 +1,4 @@
-type HttpClientResponse = {
+export type HttpClientResponse = {
   ok: boolean;
   body: object;
 };
@@ -11,6 +11,7 @@ export async function HttpClient<T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
   fetchOptions: FetchOptions<T>,
+  authorization?: string,
 ): Promise<HttpClientResponse> {
   return await fetch(url, {
     ...fetchOptions,
@@ -19,6 +20,7 @@ export async function HttpClient<T>(
       accept: 'application/json',
       'Content-Type': 'application/json',
       ...fetchOptions.headers,
+      Authorization: authorization ? 'Bearer ' + authorization : '',
     },
     body: fetchOptions.body ? JSON.stringify(fetchOptions.body) : null,
   }).then(async (response) => {
@@ -32,6 +34,7 @@ export async function HttpClient<T>(
 export async function HttpClientGet(
   url: string,
   fetchOptions: RequestInit,
+  authorization?: string,
 ): Promise<HttpClientResponse> {
   return await fetch(url, {
     ...fetchOptions,
@@ -40,11 +43,12 @@ export async function HttpClientGet(
       accept: 'application/json',
       'Content-Type': 'application/json',
       ...fetchOptions.headers,
+      Authorization: authorization ? 'Bearer ' + authorization : '',
     },
   }).then(async (response) => {
     return {
       ok: response.ok,
       body: await response.json(),
-    };
+    } as HttpClientResponse;
   });
 }
