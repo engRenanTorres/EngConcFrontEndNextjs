@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { User } from '@/domain/users/users';
 import { useRouter } from 'next/router';
-import React, { ReactNode, createContext, useState } from 'react';
-import { auth } from '../config/firebaseConfig';
-import { signOut } from 'firebase/auth';
-import { authService } from '@/services/auth/authService';
+import React, { ReactNode, createContext, useEffect, useState } from 'react';
+import { Credencials, authService } from '@/services/auth/authService';
+import { tokenService } from '@/services/auth/tokenService';
 
 type Props = {
   children: ReactNode;
 };
 
 type AuthContextProps = {
-  currentUser?: User | false;
+  currentUser?: Credencials | false;
   loading: boolean;
   signin: (email: string, password: string) => void;
   signout: () => void;
@@ -34,12 +33,20 @@ export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
       setLoading(true);
       return await authService
         .login({ email, password })
-        .then((response) => {
-          //setCurrentUser(response.user);
+        .then(async (response) => {
           console.log('response', response);
-          router.push('/');
+          try {
+            const user = await authService.getSession();
+            setCurrentUser(user);
+            router.push('/');
+          } catch (error) {
+            setCurrentUser(false);
+          }
         })
-        .catch((error) => alert(error.message));
+        .catch((error) => {
+          alert(error.message);
+          console.log(error);
+        });
     } finally {
       setLoading(false);
     }
@@ -48,17 +55,36 @@ export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
   const signout = async () => {
     try {
       setLoading(true);
-      router.push('/');
-
-      return await signOut(auth).then(() => setCurrentUser(false));
+      tokenService.delete();
+      setCurrentUser(false);
+      router.push('/login');
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    authService
+      .getSession()
+      .then((user) => {
+        setCurrentUser(user);
+      })
+      .catch(() => {
+        setCurrentUser(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ currentUser: currentUser, loading, signin, signout }}
+      value={{
+        currentUser,
+        loading,
+        signin,
+        signout,
+      }}
     >
       {children}
     </AuthContext.Provider>

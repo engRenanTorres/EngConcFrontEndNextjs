@@ -3,8 +3,9 @@ import { Header } from '@/components/global/Header';
 import { HOME_SUBTITLE, HOME_TITLE } from '@/config/appMessages';
 import useAuth from '@/utils/hooks/useAuth';
 import withSession from '@/services/auth/session';
+import { ReactNode } from 'react';
 
-export default function Home(props: any) {
+export default function Home(props: ReactNode) {
   const { currentUser, loading, signin, signout } = useAuth();
   return (
     <>

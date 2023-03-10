@@ -10,16 +10,17 @@ type FetchOptions<T> = Omit<RequestInit, 'body'> & {
 export async function HttpClient<T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
-  fetchOptions: FetchOptions<T>,
+  fetchOptions: FetchOptions<T> = {} as FetchOptions<T>,
   authorization?: string,
 ): Promise<HttpClientResponse> {
+  const defaultHeaders = fetchOptions.headers || {};
   return await fetch(url, {
     ...fetchOptions,
     method: method,
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
-      ...fetchOptions.headers,
+      ...defaultHeaders,
       Authorization: authorization ? 'Bearer ' + authorization : '',
     },
     body: fetchOptions.body ? JSON.stringify(fetchOptions.body) : null,
@@ -33,16 +34,17 @@ export async function HttpClient<T>(
 
 export async function HttpClientGet(
   url: string,
-  fetchOptions: RequestInit,
+  fetchOptions: RequestInit = {},
   authorization?: string,
 ): Promise<HttpClientResponse> {
+  const defaultHeaders = fetchOptions.headers || {};
   return await fetch(url, {
     ...fetchOptions,
     method: 'GET',
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
-      ...fetchOptions.headers,
+      ...defaultHeaders,
       Authorization: authorization ? 'Bearer ' + authorization : '',
     },
   }).then(async (response) => {

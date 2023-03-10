@@ -17,8 +17,8 @@ export const tokenService = {
     return cookies[ACCESS_TOKEN_KEY] || '';
     //return globalThis?.localStorage?.getItem(ACCESS_TOKEN_KEY);
   },
-  delete(ctx: any = null) {
-    nookies.destroy(ctx, ACCESS_TOKEN_KEY);
+  async delete(ctx: any = null) {
+    await nookies.destroy(ctx, ACCESS_TOKEN_KEY);
     //globalThis?.localStorage?.removeItem(ACCESS_TOKEN_KEY);
   },
 };

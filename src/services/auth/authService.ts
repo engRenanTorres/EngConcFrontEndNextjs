@@ -20,7 +20,7 @@ export const authService = {
       console.log(body);
     });
   },
-  async getSession(ctx: any) {
+  async getSession(ctx: any = null): Promise<Credencials | false> {
     const accessToken = tokenService.get(ctx);
     return HttpClientGet(
       process.env.NEXT_PUBLIC_BACKEND_DEV + '/api/auth/session',
@@ -31,12 +31,12 @@ export const authService = {
         throw new Error('Não Autorizado');
       }
       const body = response.body as Body;
-      return body.credencials ? body.credencials : '';
+      return body.credencials ? body.credencials : false;
     });
   },
 };
 
-type Body = {
+export type Body = {
   valid: boolean;
   credencials: {
     id: string;
@@ -44,4 +44,11 @@ type Body = {
     email: string;
     roles: number;
   };
+};
+
+export type Credencials = {
+  id: string;
+  name: string;
+  email: string;
+  roles: number;
 };

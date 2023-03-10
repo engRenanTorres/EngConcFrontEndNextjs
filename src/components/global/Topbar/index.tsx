@@ -1,14 +1,14 @@
-import { Box, IconButton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { StyledBox } from './styles';
 import useAuth from '@/utils/hooks/useAuth';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 const Topbar = () => {
   const { currentUser, loading, signin, signout } = useAuth();
@@ -32,9 +32,17 @@ const Topbar = () => {
           <SettingsOutlinedIcon />
         </IconButton>
         <IconButton className='icon-button'>
-          {currentUser && <PersonOutlinedIcon />}
           {currentUser && <span>{currentUser.name}</span>}
-          {!currentUser && <Link href={'/login'}>Entre</Link>}
+          {currentUser && (
+            <Button onClick={() => signout()}>
+              <LogoutIcon className='icon-button' />
+            </Button>
+          )}
+          {!currentUser && (
+            <Link href={'/login'}>
+              <LoginIcon className='icon-button' />
+            </Link>
+          )}
         </IconButton>
       </Box>
     </StyledBox>
