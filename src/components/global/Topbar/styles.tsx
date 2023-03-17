@@ -5,8 +5,8 @@ export const StyledBox = styled(Box)`
   ${({ theme }) => css`
     background: ${theme.palette.primary.light};
     color: ${theme.palette.neutral.light};
-    display: ${'flex'};
-    justify-content: ${'space-between'};
+    display: flex;
+    justify-content: space-between;
     padding: ${theme.spacings.small};
 
     .icon-button {

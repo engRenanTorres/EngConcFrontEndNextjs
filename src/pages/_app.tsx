@@ -7,6 +7,7 @@ import type { AppProps } from 'next/app';
 import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import PageProvider from '@/utils/theme/PageProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
+import Sidebar2 from '@/components/global/Sidebar2';
 
 const clientSideEmotionCache = createCache({ key: 'css', prepend: true });
 

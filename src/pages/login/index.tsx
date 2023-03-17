@@ -1,5 +1,7 @@
 import { FormEventHandler, useCallback } from 'react';
 import useAuth from '@/utils/hooks/useAuth';
+import Sidebar from '@/components/global/Sidebar';
+import Sidebar2 from '@/components/global/Sidebar2';
 
 interface eventTarget extends HTMLFormControlsCollection {
   email: HTMLInputElement;
